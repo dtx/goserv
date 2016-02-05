@@ -4,11 +4,9 @@ import(
 	"io"
 	"net/http"
 	"handlers/app1"
-	//"handlers/github.com/dtx/gonserv/muxmapping"
 )
 
 var mux map[string]func(http.ResponseWriter, *http.Request)
-//var mux := muxmapping.mux
 
 func startServe(){
 	//read muxmapping directory
@@ -23,7 +21,7 @@ func startServe(){
 
 	//init the map and adding a default example value
 	mux = make(map[string]func(http.ResponseWriter, *http.Request))
-	mux["/"] = app1.Hello
+	mux["/"] = app1.SayHello
 	MyServer.ListenAndServe()
 }
 
