@@ -1,4 +1,4 @@
-package controller
+package goserv
 
 import(
 	"io/ioutil"
@@ -42,6 +42,7 @@ func find_content(paths []string) map[string]string{
 		}
 		for i:=0; i<len(files); i++{
 			if check_extension(files[i].Name(), "mux"){
+				fmt.Println("Multiplexer mapping (.mux) %s found in path %s", files[i].Name(), path)
 				muxlocations[files[i].Name()] = path
 			}
 		}
@@ -59,11 +60,50 @@ func Loadmappings() map[string]string{
 	//read all the files in this directory and expose them
 	//fmt.Println(muxpath)
 	muxlocations:= find_content(possible_paths())
+	return muxlocations
+}
 
-	for k, v := range muxlocations{
+//return a map of keys as routes and values as method names, from a muxmapping file path
+func Readmapping(muxmap_path string) map[string]string{
+	mapping_data, err := ioutil.ReadFile(muxmap_path)
+	mapping := make(map[string]string)
+	if err != nil{
+		fmt.Println("There was an error in reading from file: %s", muxmap_path)
+	}
+	mapping_data_lines := strings.Split(string(mapping_data), "\n")
+	for _,line := range mapping_data_lines{
+		route_method := strings.Split(line, " ")
+		//if route method was succesfully split into 2 parts
+		if len(route_method) == 2 {
+			mapping[route_method[0]] = route_method[1]
+			continue
+		}
+		//if not a valid split, then dont break
+	}
+	for k, v := range mapping{
 		fmt.Println(k)
 		fmt.Println(v)
 		fmt.Println("--")
 	}
-	return muxlocations
+	return mapping
+}
+
+func Readallmapping() []map[string]string{
+	fmt.Println("Reading all mappings")
+	op := Loadmappings()
+	var all_muxmappings []map[string]string
+	for file,dir := range op{
+		//join k+v to form a full path
+		a_muxmapping := Readmapping(dir+file)
+		all_muxmappings = append(all_muxmappings, a_muxmapping)
+	}
+	for _, i := range all_muxmappings{
+		fmt.Println("New Mapping")
+		for k,v := range i{
+			fmt.Println(k)
+			fmt.Println(v)
+			fmt.Println("...")
+		}
+	}
+	return all_muxmappings
 }

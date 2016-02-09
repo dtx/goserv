@@ -1,4 +1,4 @@
-package controller
+package goserv
 
 import (
 	"testing"
@@ -16,13 +16,22 @@ func TestLoadmappings(t *testing.T){
 func TestPossible_paths(t *testing.T){
 	fmt.Println("Getting possible paths")
 	assert := assert.New(t)
-	requiredPaths := mapset.NewSet()
+	emptySet := mapset.NewSet()
 	obtainedPaths := mapset.NewSet()
-	requiredPaths.Add("/Users/dsanghani/personalGit/goserv/src/muxmapping/")
-	requiredPaths.Add("/Users/dsanghani/go/src/muxmapping/")
 	possible_mux_paths := possible_paths()
 	for _, v := range possible_mux_paths{
 		obtainedPaths.Add(v)
 	}
-	assert.True(requiredPaths.Equal(obtainedPaths))
+	assert.False(emptySet.Equal(obtainedPaths))
+}
+
+func TestReadmapping(t *testing.T){
+	fmt.Println("reading data from test files")
+	mappings := Readmapping("/Users/dsanghani/personalGit/goserv/src/muxmapping/app1ver2.mux")
+	assert.Equal(t, len(mappings), 5)
+}
+
+func TestReadallmapping(t *testing.T){
+	fmt.Println("reading data from test files")
+	Readallmapping()
 }
