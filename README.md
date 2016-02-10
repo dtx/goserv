@@ -13,6 +13,11 @@ GoServ needs 2 user inputs to work:
 - A set of multiplexor mappings, each set is a declaration of an HTTP server. These mappings lie in the 
 $GOPATH/muxmapping directory on your system.
 ```
+/ sayhello_v1
+/try try
+```
+After a while, I release a version 2 api with new endpoints, does not mean I have to give up on my previosu version endpoints.
+```
 / sayhello_v2
 /old sayhello_v1
 /spanish sayhola
@@ -40,8 +45,8 @@ func main(){
     funcmap["sayhello_v1"]=app1.SayHello
     funcmap["sayhello_v2"]=app1_ver2.SayHelloV2
     funcmap["try"]=app1.TryMe
-    funcmap["spanish"]=app1_ver2.SayHolaV1
-    funcmap["hindi"]=app1_ver2.SayHolaV1
+    funcmap["sayhola"]=app1_ver2.SayHolaV1
+    funcmap["sayhindi"]=app1_ver2.SayNamaste
 
     goserv := goserv.GoServ{}
     goserv.LearnNames(funcmap)
