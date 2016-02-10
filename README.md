@@ -12,6 +12,7 @@ that come with the module.
 GoServ needs 2 user inputs to work:
 - A set of multiplexor mappings, each set is a declaration of an HTTP server. These mappings lie in the 
 $GOPATH/muxmapping directory on your system.
+These are maps of <<routes>,<method nicknames>>
 ```
 / sayhello_v1
 /try try
