@@ -6,7 +6,6 @@ import(
 	"sync"
 	"time"
 	"errors"
-	"reflect"
 	"strconv"
 	"net/http"
 	"math/rand"
@@ -45,20 +44,11 @@ func (gs *GoServ) translateMappingToMethods(raw_muxmappings []map[string]string)
 		}
 		muxmappings = append(muxmappings, mux)
 	}
-	fmt.Println("Length of servers: ", len(muxmappings))
-	fmt.Printf("%v", muxmappings)
 	return muxmappings, nil
 }
 
 func (gs *GoServ) startServer(p map[string]func(http.ResponseWriter, *http.Request)){
 	//find a 'random' port between 9000 and 65535
-	fmt.Println("__________________________________")
-	fmt.Println("size of map is", len(p))
-	for route, method := range p{
-		fmt.Printf("route is %s\n", route)
-		fmt.Printf("Type of method is %s\n" ,reflect.TypeOf(method))
-	}
-	fmt.Println("__________________________________")
 	return
 	rand.Seed(time.Now().UnixNano())
 	port := rand.Intn(65535-9000) + 9000

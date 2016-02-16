@@ -80,11 +80,6 @@ func Readmapping(muxmap_path string) map[string]string{
 		}
 		//if not a valid split, then dont break
 	}
-	for k, v := range mapping{
-		fmt.Println(k)
-		fmt.Println(v)
-		fmt.Println("--")
-	}
 	return mapping
 }
 
@@ -96,14 +91,6 @@ func Readallmapping() []map[string]string{
 		//join k+v to form a full path
 		a_muxmapping := Readmapping(dir+file)
 		all_muxmappings = append(all_muxmappings, a_muxmapping)
-	}
-	for _, i := range all_muxmappings{
-		fmt.Println("New Mapping")
-		for k,v := range i{
-			fmt.Println(k)
-			fmt.Println(v)
-			fmt.Println("...")
-		}
 	}
 	return all_muxmappings
 }
