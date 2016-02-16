@@ -12,7 +12,7 @@ func SayHelloV2(r http.ResponseWriter, w *http.Request){
 	fmt.Println("Hello World with language support!")
 }
 
-func SayHolaV1(r http.ResponseWriter, w *http.Request) {
+func SayHola(r http.ResponseWriter, w *http.Request) {
 	//do something
 	fmt.Println("Hola Mundo!")
 }

@@ -4,7 +4,10 @@ import(
 	"io"
 	"fmt"
 	"sync"
+	"time"
 	"errors"
+	"reflect"
+	"strconv"
 	"net/http"
 	"math/rand"
 )
@@ -34,6 +37,7 @@ func (gs *GoServ) translateMappingToMethods(raw_muxmappings []map[string]string)
 	var muxmappings []map[string]func(http.ResponseWriter, *http.Request)
 	var mux map[string]func(http.ResponseWriter, *http.Request)
 	for _,raw_muxmapping := range raw_muxmappings{
+		mux =  make(map[string]func(http.ResponseWriter, *http.Request))
 		for route,nickname := range raw_muxmapping{
 			//translate v to hold func() obj
 			method := gs.rosettaStone[nickname]
@@ -41,21 +45,32 @@ func (gs *GoServ) translateMappingToMethods(raw_muxmappings []map[string]string)
 		}
 		muxmappings = append(muxmappings, mux)
 	}
+	fmt.Println("Length of servers: ", len(muxmappings))
+	fmt.Printf("%v", muxmappings)
 	return muxmappings, nil
 }
 
 func (gs *GoServ) startServer(p map[string]func(http.ResponseWriter, *http.Request)){
-	defer gs.wg.Done()
 	//find a 'random' port between 9000 and 65535
+	fmt.Println("__________________________________")
+	fmt.Println("size of map is", len(p))
+	for route, method := range p{
+		fmt.Printf("route is %s\n", route)
+		fmt.Printf("Type of method is %s\n" ,reflect.TypeOf(method))
+	}
+	fmt.Println("__________________________________")
+	return
+	rand.Seed(time.Now().UnixNano())
 	port := rand.Intn(65535-9000) + 9000
 	//todo(darshan): need to add a check if a port number is already used
+	port_string := ":"+strconv.Itoa(port)
+	fmt.Printf("Starting on a random port %s\n", port_string)
 	MyServer := http.Server{
-	Addr: ":"+string(port),
+	Addr: port_string,
 	Handler: &myHandlers{
 		muxmapping : p,
 		},
 	}
-	fmt.Printf("Starting a server on port %d\n", port)
 	MyServer.ListenAndServe()
 }
 func (gs *GoServ) StartServe() int{
@@ -72,9 +87,10 @@ func (gs *GoServ) StartServe() int{
 	for _,mux := range translated_muxmappingsgs{
 		//start a thread for each server here
 		gs.wg.Add(1)
-		go gs.startServer(mux)
+		gs.startServer(mux)
 	}
 	gs.wg.Wait()
+	fmt.Println("Exiting Now")
 	return 1
 }
 
